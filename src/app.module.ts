@@ -8,8 +8,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
-import { Point } from './user/entities/point.entity';
+import { PerformanceModule } from './performance/performance.module';
+
+import { AwsModule } from './aws/aws.module';
+import { TicketModule } from './ticket/ticket.module';
 
 const typeOrmModuleOptions = {
   useFactory: async (
@@ -22,7 +24,7 @@ const typeOrmModuleOptions = {
     host: configServce.get('DB_HOST'),
     port: configServce.get('DB_PORT'),
     database: configServce.get('DB_NAME'),
-    entities: [User, Point],
+    entities: [__dirname + '/**/**/*.entity.{js,ts}'],
     synchronize: configServce.get('DB_HOST'),
     logging: true,
   }),
@@ -46,6 +48,9 @@ const typeOrmModuleOptions = {
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     AuthModule,
     UserModule,
+    PerformanceModule,
+    AwsModule,
+    TicketModule,
   ],
 
   controllers: [AppController],

@@ -25,7 +25,7 @@ export class User {
   @Column({ type: 'varchar', select: false, nullable: false })
   password: string;
 
-  @Column({ type: 'enum', enum: Role, default: Role.Customer })
+  @Column({ type: 'enum', enum: Role, default: Role.User })
   role: Role;
 
   @OneToMany(() => Point, (point) => point.user)

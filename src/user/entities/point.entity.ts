@@ -16,9 +16,11 @@ export class Point {
   @PrimaryGeneratedColumn()
   pointId: number;
 
-  @ManyToOne(() => User, (user) => user.point)
+  @ManyToOne(() => User, (user) => user.point, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
-  user: User; // 사용자와의 관계를 나타내는 열입니다.
+  user: User;
 
   @Column({ type: 'int', name: 'user_id' })
   user_id: number;
