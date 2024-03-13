@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 import { Hall } from './hall.entity';
-import { Schedule } from './schedule.entity';
+import { Schedule } from '../../schedule/entities/schedule.entity';
 
 @Entity({
   name: 'performances',

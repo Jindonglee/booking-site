@@ -36,7 +36,7 @@ export class PerformanceController {
     return await this.performanceService.findOne(id);
   }
 
-  @Get('search')
+  @Post('search')
   async search(@Body('keyword') keyword: string) {
     if (!keyword) {
       throw new BadRequestException('검색어를 제공해야 합니다.');

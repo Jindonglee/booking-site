@@ -39,11 +39,7 @@ export class UserService {
       nick_name: createUserDto.nick_name,
     });
 
-    await this.pointRepository.save({
-      user_id: newUser.user_id,
-      point: 1000000,
-      history: '+1000000',
-    });
+    await this.plusPoint(newUser.user_id, 1000000);
 
     return { message: '회원가입에 성공하셨습니다.' };
   }
@@ -88,7 +84,10 @@ export class UserService {
   }
 
   async findPoint(user_id: number) {
-    return await this.pointRepository.findBy({ user_id });
+    return await this.pointRepository.find({
+      where: { user_id },
+      order: { ['createdAt']: 'DESC' },
+    });
   }
 
   async update(user_id: number, updateUserDto: UpdateUserDto) {
@@ -128,5 +127,31 @@ export class UserService {
     const deleteUser = await this.userRepository.delete({ user_id });
 
     return { message: '성공적으로 삭제되었습니다.' };
+  }
+
+  async minusPoint(user_id: number, point: number) {
+    const currentPoint = await this.pointRepository
+      .createQueryBuilder('point')
+      .where('point.user_id = :user_id', { user_id })
+      .orderBy('point.createdAt', 'DESC')
+      .getOne();
+    return await this.pointRepository.save({
+      user_id,
+      point: +currentPoint.point - point,
+      history: `-${point}`,
+    });
+  }
+
+  async plusPoint(user_id: number, point: number) {
+    const currentPoint = await this.pointRepository
+      .createQueryBuilder('point')
+      .where('point.user_id = :user_id', { user_id })
+      .orderBy('point.createdAt', 'DESC')
+      .getOne();
+    return await this.pointRepository.save({
+      user_id,
+      point: +currentPoint.point + point,
+      history: `+${point}`,
+    });
   }
 }

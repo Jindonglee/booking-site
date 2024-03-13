@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Role } from '../types/userRole.type';
 import { Point } from './point.entity';
+import { Ticket } from 'src/ticket/entities/ticket.entity';
 
 @Index('email', ['email'], { unique: true })
 @Entity({
@@ -30,4 +31,7 @@ export class User {
 
   @OneToMany(() => Point, (point) => point.user)
   point: Point;
+
+  @OneToMany(() => Ticket, (ticket) => ticket.user)
+  ticket: Ticket;
 }

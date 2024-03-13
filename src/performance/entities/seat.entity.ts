@@ -10,7 +10,8 @@ import {
 } from 'typeorm';
 
 import { Hall } from './hall.entity';
-import { Round_Seat } from './round_seat.entity';
+import { Round_Seat } from '../../ticket/entities/round_seat.entity';
+import { Ticket } from 'src/ticket/entities/ticket.entity';
 
 @Entity({
   name: 'seats',
@@ -46,4 +47,7 @@ export class Seat {
 
   @OneToMany(() => Round_Seat, (round_seat) => round_seat.seat)
   round_seat: Round_Seat;
+
+  @OneToMany(() => Ticket, (ticket) => ticket.seat)
+  ticket: Ticket;
 }

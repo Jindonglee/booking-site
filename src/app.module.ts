@@ -12,6 +12,7 @@ import { PerformanceModule } from './performance/performance.module';
 
 import { AwsModule } from './aws/aws.module';
 import { TicketModule } from './ticket/ticket.module';
+import { ScheduleModule } from './schedule/schedule.module';
 
 const typeOrmModuleOptions = {
   useFactory: async (
@@ -51,6 +52,7 @@ const typeOrmModuleOptions = {
     PerformanceModule,
     AwsModule,
     TicketModule,
+    ScheduleModule,
   ],
 
   controllers: [AppController],

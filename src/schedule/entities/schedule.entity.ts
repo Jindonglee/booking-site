@@ -9,8 +9,9 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { Performance } from './performance.entity';
-import { Round_Seat } from './round_seat.entity';
+import { Performance } from '../../performance/entities/performance.entity';
+import { Round_Seat } from '../../ticket/entities/round_seat.entity';
+import { Ticket } from 'src/ticket/entities/ticket.entity';
 
 enum Status {
   available,
@@ -43,7 +44,7 @@ export class Schedule {
   @Column({ type: 'time' })
   start_time: string;
 
-  @Column({ type: 'time' })
+  @Column({ type: 'time', nullable: true })
   end_time: string;
 
   @Column({ type: 'enum', enum: Status, default: Status.available })
@@ -57,4 +58,7 @@ export class Schedule {
 
   @OneToMany(() => Round_Seat, (round_seat) => round_seat.schedule)
   round_seat: Round_Seat;
+
+  @OneToMany(() => Ticket, (ticket) => ticket.schedule)
+  ticket: Ticket;
 }
