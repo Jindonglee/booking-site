@@ -21,10 +21,16 @@ export class PerformanceService {
   ) {}
 
   async search(keyword: string): Promise<Performance[]> {
-    return await this.performanceRepository
+    const result = await this.performanceRepository
       .createQueryBuilder('performance')
       .where('performance.title LIKE :keyword', { keyword: `%${keyword}%` })
       .getMany();
+
+    if (_.isEmpty(result)) {
+      throw new NotFoundException('검색 결과가 없습니다.');
+    }
+
+    return result;
   }
 
   async findAllOrderBy(
