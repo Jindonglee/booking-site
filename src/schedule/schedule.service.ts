@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Schedule } from '../schedule/entities/schedule.entity';
 import { Repository } from 'typeorm';
+import { Status } from './types/status.type';
 
 @Injectable()
 export class ScheduleService {
@@ -53,6 +54,8 @@ export class ScheduleService {
   async checkRemainingSeat(schedule_id: number) {
     const schedule = await this.scheduleRepository.findOneBy({ schedule_id });
     if (schedule.remaining_seat === 0) {
+      schedule.status = Status.disavailable;
+      this.scheduleRepository.save(schedule);
       throw new NotFoundException('좌석이 없습니다!');
     }
     return schedule;
@@ -60,6 +63,9 @@ export class ScheduleService {
 
   async plusRemaingSeat(schedule_id: number) {
     const schedule = await this.scheduleRepository.findOneBy({ schedule_id });
+    if (schedule.status === '예매 불가') {
+      schedule.status = Status.available;
+    }
     schedule.remaining_seat += 1;
     await this.scheduleRepository.save(schedule);
     return schedule;

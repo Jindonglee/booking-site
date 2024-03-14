@@ -21,7 +21,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreatePerformanceDto } from './dto/create-performance.dto';
 import { PerformanceService } from './performance.service';
 
-@UseGuards(RolesGuard)
 @Controller('performance')
 export class PerformanceController {
   constructor(private readonly performanceService: PerformanceService) {}
@@ -43,7 +42,7 @@ export class PerformanceController {
     }
     return await this.performanceService.search(keyword);
   }
-
+  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   @Post()
   async createPerformance(@Body() createPerformanceDto: CreatePerformanceDto) {
@@ -52,6 +51,8 @@ export class PerformanceController {
 
     return { message: '공연 등록에 성공하셨습니다.' };
   }
+
+  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   @Post(':id')
   @UseInterceptors(FileInterceptor('file'))

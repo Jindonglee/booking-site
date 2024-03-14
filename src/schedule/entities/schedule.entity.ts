@@ -12,11 +12,7 @@ import {
 import { Performance } from '../../performance/entities/performance.entity';
 import { Round_Seat } from '../../ticket/entities/round_seat.entity';
 import { Ticket } from 'src/ticket/entities/ticket.entity';
-
-enum Status {
-  available,
-  disavailable,
-}
+import { Status } from '../types/status.type';
 
 @Entity({
   name: 'schedules',

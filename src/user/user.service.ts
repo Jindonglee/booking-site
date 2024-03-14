@@ -39,7 +39,11 @@ export class UserService {
       nick_name: createUserDto.nick_name,
     });
 
-    await this.plusPoint(newUser.user_id, 1000000);
+    await this.pointRepository.save({
+      user_id: newUser.user_id,
+      point: 1000000,
+      history: `+1000000`,
+    });
 
     return { message: '회원가입에 성공하셨습니다.' };
   }
