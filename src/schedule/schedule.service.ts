@@ -27,9 +27,6 @@ export class ScheduleService {
     const scheduleDateTime = new Date(
       `${schedule.schedule_date} ${schedule.start_time}`,
     );
-    console.log(schedule.start_time);
-    console.log({ 현재시간: currentDateTime });
-    console.log({ 시작시간: scheduleDateTime });
 
     if (currentDateTime > scheduleDateTime) {
       throw new BadRequestException('예약 시간이 이미 지났습니다.');
@@ -39,8 +36,6 @@ export class ScheduleService {
     const timeDifference = Math.abs(
       currentDateTime.getTime() - scheduleDateTime.getTime(),
     );
-    console.log({ 현재시간: currentDateTime.getTime() });
-    console.log({ 시작시간: scheduleDateTime.getTime() });
 
     // 3시간 이상 차이가 나는 경우 오류 반환
     const threeHoursInMillis = 3 * 60 * 60 * 1000;

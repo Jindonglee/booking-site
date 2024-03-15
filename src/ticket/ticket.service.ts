@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Ticket } from './entities/ticket.entity';
 import { Seat } from 'src/performance/entities/seat.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -30,6 +30,7 @@ export class TicketService {
     private seatRepository: Repository<Seat>,
     private readonly userService: UserService,
     private readonly scheduleService: ScheduleService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(id: number, createTicketDto: CreateTicketDto) {
@@ -57,10 +58,22 @@ export class TicketService {
       throw new BadRequestException('포인트가 부족합니다.');
     }
 
-    roundSeat.status = SeatStatus.reservation_disavailable;
+    const queryRunner = this.dataSource.createQueryRunner();
 
-    await this.roundSeatRepository.save(roundSeat);
-    await this.ticketRepository.save({ user_id, schedule_id, seat_id });
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      roundSeat.status = SeatStatus.reservation_disavailable;
+
+      await queryRunner.manager.save(Round_Seat, roundSeat);
+      await queryRunner.manager.save(Ticket, { user_id, schedule_id, seat_id });
+
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
 
     await this.scheduleService.minusRemaingSeat(schedule_id);
 
